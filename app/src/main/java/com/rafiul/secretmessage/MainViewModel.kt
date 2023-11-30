@@ -20,6 +20,9 @@ class MainViewModel : ViewModel(), KoinComponent {
     private val _messages = MutableStateFlow<List<MessageEntity>>(emptyList())
     val messages = _messages.asStateFlow()
 
+    init {
+        getAllMessage()
+    }
 
     fun createMessage(message: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -27,7 +30,7 @@ class MainViewModel : ViewModel(), KoinComponent {
         }
     }
 
-    fun getAllMessage() {
+    private fun getAllMessage() {
         viewModelScope.launch(Dispatchers.IO) {
             dao.getMessages().collect { result ->
                 _messages.update { result }

@@ -12,7 +12,7 @@ import com.rafiul.secretmessage.R
 val Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = FontFamily(listOf(Font(R.font.ubuntu))),
-        fontWeight = FontWeight.Normal,
+         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp

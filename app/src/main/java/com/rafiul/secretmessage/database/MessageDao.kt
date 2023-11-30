@@ -10,11 +10,11 @@ import kotlinx.coroutines.flow.Flow
 interface MessageDao {
 
     @Insert
-    suspend fun createMessage(messageEntity: MessageEntity)
+    fun createMessage(messageEntity: MessageEntity)
 
     @Query("SELECT * FROM messages")
-    suspend fun getMessages(): Flow<List<MessageEntity>>
+    fun getMessages(): Flow<List<MessageEntity>>
 
     @Delete
-    suspend fun deleteMessage(messageEntity: MessageEntity)
+    fun deleteMessage(messageEntity: MessageEntity)
 }
