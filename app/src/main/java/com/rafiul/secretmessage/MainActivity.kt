@@ -4,6 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -33,6 +38,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,8 +54,8 @@ import androidx.compose.ui.window.Dialog
 import com.rafiul.secretmessage.ui.theme.SecretMessageTheme
 import org.koin.core.component.getScopeId
 
-class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3Api::class)
+class MainActivity : AppCompatActivity() {
+    @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -68,6 +74,27 @@ class MainActivity : ComponentActivity() {
                     val dialogOpen = remember {
                         mutableStateOf(false)
                     }
+
+                    val authorized = remember {
+                        mutableStateOf(false)
+                    }
+
+                    val authorization: () -> Unit = {
+                        BioMetricHelper.showPrompt(this){
+                            authorized.value =true
+                        }
+                    }
+
+                    LaunchedEffect(Unit){
+                        authorization()
+                    }
+
+                    val blurValue by animateDpAsState(
+                        targetValue = if (authorized.value) 0.dp else 15.dp,
+                        animationSpec = tween(500)
+                    )
+
+
 
                     if (dialogOpen.value) {
                         Dialog(onDismissRequest = { dialogOpen.value = false }) {
@@ -144,6 +171,21 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxSize(),
                         floatingActionButton = {
                             Column {
+                                AnimatedVisibility(visible = !authorized.value) {
+                                    FloatingActionButton(
+                                        onClick = {
+                                          authorization
+                                        },
+                                        containerColor = MaterialTheme.colorScheme.primary
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Add,
+                                            contentDescription = null,
+                                            tint = Color.White
+                                        )
+                                    }
+
+                                }
                                 FloatingActionButton(
                                     onClick = {
                                         dialogOpen.value = true
@@ -156,6 +198,7 @@ class MainActivity : ComponentActivity() {
                                         tint = Color.White
                                     )
                                 }
+
                             }
                         }
 
@@ -175,28 +218,37 @@ class MainActivity : ComponentActivity() {
 
                                     Box(
                                         modifier = Modifier
+                                            .animateItemPlacement(
+                                                animationSpec = tween(
+                                                    500
+                                                )
+                                            )
                                             .fillMaxWidth()
                                             .clip(RoundedCornerShape(10.dp))
                                             .background(MaterialTheme.colorScheme.primary)
                                             .blur(
-                                                0.dp,
+                                                blurValue,
                                                 edgeTreatment = BlurredEdgeTreatment.Unbounded
                                             )
                                     ) {
                                         Row(
-                                            modifier = Modifier.fillMaxWidth().padding(8.dp),
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(8.dp),
                                             horizontalArrangement = Arrangement.SpaceBetween
                                         ) {
-                                            Text(text = it.message, color = Color.White)
+                                            Text(text = it.message, color = Color(0xffcccccc))
 
-                                            Icon(
-                                                imageVector = Icons.Default.Delete,
-                                                contentDescription = null,
-                                                modifier = Modifier.clickable {
-                                                    viewModel.deleteMessage(it)
-                                                },
-                                                tint = Color.Red
-                                            )
+                                            AnimatedVisibility(visible = authorized.value) {
+                                                Icon(
+                                                    imageVector = Icons.Default.Delete,
+                                                    contentDescription = null,
+                                                    modifier = Modifier.clickable {
+                                                        viewModel.deleteMessage(it)
+                                                    },
+                                                    tint = Color.Red
+                                                )
+                                            }
 
                                         }
                                     }
