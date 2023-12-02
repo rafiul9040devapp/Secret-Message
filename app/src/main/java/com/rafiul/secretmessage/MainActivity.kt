@@ -2,7 +2,6 @@ package com.rafiul.secretmessage
 
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -24,7 +23,9 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -84,6 +85,15 @@ class MainActivity : AppCompatActivity() {
 
                     val messages by viewModel.messages.collectAsState()
 
+                    val imeState = rememberImeState()
+                    val scrollState = rememberScrollState()
+
+                    LaunchedEffect(key1 = imeState.value) {
+                        if (imeState.value) {
+                            scrollState.animateScrollTo(scrollState.maxValue, tween(300))
+                        }
+                    }
+
 
                     val dialogOpen = remember {
                         mutableStateOf(false)
@@ -121,7 +131,7 @@ class MainActivity : AppCompatActivity() {
 
 
                     if (dialogOpen.value) {
-                       Dialog(onDismissRequest = { dialogOpen.value = false }) {
+                        Dialog(onDismissRequest = { dialogOpen.value = false }) {
                             Box(
                                 modifier = Modifier
                                     .fillMaxSize()
@@ -134,6 +144,8 @@ class MainActivity : AppCompatActivity() {
                                         .clip(RoundedCornerShape(12.dp))
                                         .background(MaterialTheme.colorScheme.primary)
                                         .padding(all = 16.dp)
+                                        .imePadding()
+                                        .verticalScroll(scrollState)
                                 ) {
                                     val secretMessage = remember {
                                         mutableStateOf("")
@@ -169,7 +181,9 @@ class MainActivity : AppCompatActivity() {
 
                                     Row(
                                         horizontalArrangement = Arrangement.SpaceBetween,
-                                        modifier = Modifier.fillMaxWidth()
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .imePadding()
                                     ) {
                                         Button(
                                             onClick = {
@@ -188,7 +202,9 @@ class MainActivity : AppCompatActivity() {
                                                 containerColor = MaterialTheme.colorScheme.secondary
                                             ),
                                             shape = RoundedCornerShape(12.dp),
-                                            modifier = Modifier.weight(1f).padding(all = 4.dp)
+                                            modifier = Modifier
+                                                .weight(1f)
+                                                .padding(all = 4.dp)
                                         ) {
                                             Text(text = "ADD", color = Color.Green)
 
@@ -202,7 +218,9 @@ class MainActivity : AppCompatActivity() {
                                                 containerColor = MaterialTheme.colorScheme.secondary
                                             ),
                                             shape = RoundedCornerShape(12.dp),
-                                            modifier = Modifier.weight(1f).padding(all = 4.dp)
+                                            modifier = Modifier
+                                                .weight(1f)
+                                                .padding(all = 4.dp)
                                         ) {
                                             Text(text = "Cancel", color = Color.Red)
 
