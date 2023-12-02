@@ -2,6 +2,7 @@ package com.rafiul.secretmessage
 
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -21,7 +22,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -58,6 +58,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
@@ -67,6 +68,9 @@ class MainActivity : AppCompatActivity() {
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        installSplashScreen()
+
         setContent {
             SecretMessageTheme {
                 // A surface container using the 'background' color from the theme
@@ -117,7 +121,7 @@ class MainActivity : AppCompatActivity() {
 
 
                     if (dialogOpen.value) {
-                        Dialog(onDismissRequest = { dialogOpen.value = false }) {
+                       Dialog(onDismissRequest = { dialogOpen.value = false }) {
                             Box(
                                 modifier = Modifier
                                     .fillMaxSize()
@@ -183,7 +187,8 @@ class MainActivity : AppCompatActivity() {
                                             colors = ButtonDefaults.buttonColors(
                                                 containerColor = MaterialTheme.colorScheme.secondary
                                             ),
-                                            shape = RoundedCornerShape(12.dp)
+                                            shape = RoundedCornerShape(12.dp),
+                                            modifier = Modifier.weight(1f).padding(all = 4.dp)
                                         ) {
                                             Text(text = "ADD", color = Color.Green)
 
@@ -196,7 +201,8 @@ class MainActivity : AppCompatActivity() {
                                             colors = ButtonDefaults.buttonColors(
                                                 containerColor = MaterialTheme.colorScheme.secondary
                                             ),
-                                            shape = RoundedCornerShape(12.dp)
+                                            shape = RoundedCornerShape(12.dp),
+                                            modifier = Modifier.weight(1f).padding(all = 4.dp)
                                         ) {
                                             Text(text = "Cancel", color = Color.Red)
 

@@ -85,5 +85,9 @@ dependencies {
     val biometricVersion = "1.1.0"
     implementation("androidx.biometric:biometric:$biometricVersion")
 
+    implementation ("androidx.core:core-splashscreen:1.0.1")
+
+    implementation ("androidx.appcompat:appcompat:1.7.0-alpha03")
+
 }
 
