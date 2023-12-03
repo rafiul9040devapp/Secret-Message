@@ -37,6 +37,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -74,7 +75,6 @@ class MainActivity : AppCompatActivity() {
 
         setContent {
             SecretMessageTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -166,14 +166,14 @@ class MainActivity : AppCompatActivity() {
                                                 contentDescription = null
                                             )
                                         },
-                                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                                        colors = OutlinedTextFieldDefaults.colors(
                                             focusedBorderColor = Color.White,
+                                            unfocusedBorderColor = Color(0xffcccccc),
                                             focusedLeadingIconColor = Color.White,
+                                            unfocusedLeadingIconColor = Color(0xffcccccc),
                                             focusedLabelColor = Color.White,
                                             unfocusedLabelColor = Color(0xffcccccc),
-                                            unfocusedLeadingIconColor = Color(0xffcccccc),
-                                            unfocusedBorderColor = Color(0xffcccccc),
-                                            textColor = Color.White
+                                            cursorColor = Color.White,
                                         )
                                     )
 
